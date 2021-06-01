@@ -1,0 +1,26 @@
+body{
+    margin: 0;
+    background-color: #ffffff;
+}
+header {
+    height: 80px;
+    background-color: #0a53be;
+}
+h3 {
+    margin: 0 auto;
+    color: #ffffff;
+}
+a, a:link, a:visited, a:hover, a:focus, a:active {
+    color: #ffffff;
+    text-decoration: none;
+}
+form {
+    height: 80px;
+    margin: 30px 0px;
+}
+table{
+    table-layout: fixed;
+}
+th, td {
+    word-wrap: break-word;
+}

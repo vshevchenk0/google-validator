@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Google Product Feed Validator</title>
+    <link rel="stylesheet" href={{ url_for('static', filename='css/bootstrap.min.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='css/style.css') }}>
+    <script src={{ url_for('static', filename='js/bootstrap.bundle.min.js') }}></script>
+</head>
+<body>
+    <a href="/">
+        <header class="d-flex align-items-center">
+            <h3>Google Product Feed Validator</h3>
+        </header>
+    </a>
+    <div class="container">
+        <div class="row">
+            <div class="col d-inline-block align">
+                <form action="{{ url_for('upload_from_url') }}" method="POST">
+                    <label for="url">Insert the link to feed</label>
+                    <input type="text" name="url" id="url">
+                    <input type="submit" value="Validate">
+                </form>
+            </div>
+            <div class="col d-inline-block">
+                <form action="{{ url_for('upload_from_file') }}" method="POST" enctype=multipart/form-data>
+                    <label for="file">Upload feed file</label>
+                    <input type="file" name="file" id="file" value="Choose file">
+                    <input type="submit" value="Validate">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="container d-flex flex-column align-items-center">
+        {% if error %}
+            <div class="alert alert-danger w-50 d-flex justify-content-center">{{ error }}</div>
+        {% endif %}
+    </div>
+    <div class="container d-flex flex-column align-items-center">
+            {% if errors %}
+                {% for key, value in errors['errors'].items() %}
+                    {% if value|length > 0 %}
+                    {% if key == "namespace" %}
+                        {% for error in value %}
+                        <div class="mandatory alert alert-danger w-50 d-flex justify-content-center"> {{ error }}</div>
+                        {% endfor %}
+                    {% elif data[key]['mandatory'] %}
+                        {% for error in value %}
+                        <div class="mandatory alert alert-danger w-50 d-flex justify-content-center"> {{ error }}</div>
+                        {% endfor %}
+                    {% else %}
+                        {% for error in value %}
+                        <div class="optional alert alert-info w-50 d-flex justify-content-center">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+    </div>
+    <div class="container">
+        {% if data %}
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 10%">Tag</th>
+                    <th scope="col" style="width: 10%">Count</th>
+                    <th scope="col" style="width: 35%">Example</th>
+                    <th scope="col" style="width: 10%">Error Count</th>
+                    <th scope="col" style="width: 35%">Error example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">ID</th>
+                    <td>{{ data['offer']['id_count'] }}</td>
+                    <td>{{ data['offer']['id_example'] }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row">Name</th>
+                    <td>{{ data['name']['entries'] }}</td>
+                    <td>{{ data['name']['example'] }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row">Category</th>
+                    <td>{{ data['category']['entries'] }}</td>
+                    <td>{{ data['category']['example'] }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row">URL</th>
+                    <td>{{ data['url']['entries'] }}</td>
+                    <td>{{ data['url']['example'] }}</td>
+                    <td>{{ data['url']['error_count'] }}</td>
+                    <td>{{ data['url']['error_example'] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Price</th>
+                    <td>{{ data['price']['entries'] }}</td>
+                    <td>{{ data['price']['example'] }}</td>
+                    <td>{{ data['price']['error_count'] }}</td>
+                    <td>{{ data['price']['error_example'] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Sale price</th>
+                    <td>{{ data['sale_price']['entries'] }}</td>
+                    <td>{{ data['sale_price']['example'] }}</td>
+                    <td>{{ data['sale_price']['error_count'] }}</td>
+                    <td>{{ data['sale_price']['error_example'] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Currency</th>
+                    <td>{{ data['currency']['entries'] }}</td>
+                    <td>{{ data['currency']['example'] }}</td>
+                    <td>{{ data['currency']['error_count'] }}</td>
+                    <td>{{ data['currency']['error_example'] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Pictures</th>
+                    <td>{{ data['pictures']['entries'] }}</td>
+                    <td>{{ data['pictures']['example'] }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row">Vendor</th>
+                    <td>{{ data['vendor']['entries'] }}</td>
+                    <td>{{ data['vendor']['example'] }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row">Description</th>
+                    <td>{{ data['description']['entries'] }}</td>
+                    <td>{{ data['description']['example'] }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</body>
+</html>
