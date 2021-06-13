@@ -2,7 +2,7 @@ import requests
 import time
 import os
 from flask import Flask, render_template, request
-from utils import parse
+from utils import process_feed
 
 
 UPLOAD_FOLDER = "./uploads/tmp"
@@ -32,10 +32,10 @@ def upload_from_file():
             text = f.read()
             if "&" in text:
                 text = text.replace("&", "&amp;")
-            result, errors = parse(text)
+            result = process_feed(text)
         if os.path.exists(file_name):
             os.remove(file_name)
-    return render_template("index.html", data=result, errors=errors)
+    return render_template("index.html", data=result)
 
 
 @app.route("/upload/url", methods=["POST"])
@@ -43,8 +43,8 @@ def upload_from_url():
     if request.form['url']:
         r = requests.get(request.form['url'])
         r.encoding = "utf-8"
-        result, errors = parse(r.text)
-        return render_template("index.html", data=result, errors=errors)
+        result = process_feed(r.text)
+        return render_template("index.html", data=result)
     else:
         error = "No url specified"
     return render_template("index.html", error=error)
